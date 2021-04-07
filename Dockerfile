@@ -24,7 +24,7 @@ ARG STERN_VERSION="1.14.0"
 ARG SENTINEL_VERSION="0.18.0"
 
 ARG ZSH_VERSION="5.8-3ubuntu1"
-ARG MULTISTAGE_BUILDER_VERSION="2020-12-07"
+ARG MULTISTAGE_BUILDER_VERSION="2021-04-07"
 
 ######################################################### BUILDER ######################################################
 FROM ssmbtech/multistage-builder:$MULTISTAGE_BUILDER_VERSION as builder

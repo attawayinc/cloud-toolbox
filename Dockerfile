@@ -28,7 +28,7 @@ ARG MULTISTAGE_BUILDER_VERSION="2020-12-07"
 
 ######################################################### BUILDER ######################################################
 FROM ssmbtech/multistage-builder:$MULTISTAGE_BUILDER_VERSION as builder
-MAINTAINER Kevin Sandermann <kevin.sandermann@gmail.com>
+#MAINTAINER Kevin Sandermann <kevin.sandermann@gmail.com>
 LABEL maintainer="kevin.sandermann@gmail.com"
 
 ARG OC_CLI_VERSION
@@ -129,7 +129,7 @@ RUN curl https://releases.hashicorp.com/sentinel/${SENTINEL_VERSION}/sentinel_${
 ######################################################### IMAGE ########################################################
 
 FROM ubuntu:$UBUNTU_VERSION
-MAINTAINER Kevin Sandermann <kevin.sandermann@gmail.com>
+#MAINTAINER Kevin Sandermann <kevin.sandermann@gmail.com>
 LABEL maintainer="kevin.sandermann@gmail.com"
 
 # tooling versions

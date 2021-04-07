@@ -9,7 +9,7 @@ UPSTREAM_TAG2="project"
 docker build \
     --pull \
     --no-cache \
-    -t ksandermann/cloud-toolbox:$IMAGE_TAG \
+    -t ssmbtech/cloud-toolbox:$IMAGE_TAG \
     .
 
 #push

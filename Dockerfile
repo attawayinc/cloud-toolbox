@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.2-labs
 ######################################################### TOOLCHAIN VERSIONING #########################################
 #settings values here to be able to use dockerhub autobuild
 ARG UBUNTU_VERSION=20.04
@@ -52,9 +53,11 @@ RUN mkdir -p oc_cli && \
     tar xzvf oc_cli.tar.gz -C oc_cli
 
 #download helm-cli
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN mkdir helm2 && curl -SsL --retry 5 "https://get.helm.sh/helm-v$HELM2_VERSION-linux-amd64.tar.gz" | tar xz -C ./helm2
 
 #download helm3-cli
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN mkdir helm && curl -SsL --retry 5 "https://get.helm.sh/helm-v$HELM_VERSION-linux-amd64.tar.gz" | tar xz -C ./helm
 
 #download terraform 0.12
@@ -206,6 +209,7 @@ RUN apt-get update && \
 
 ENV TERM xterm
 ENV ZSH_THEME agnoster
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
 
 #keep standard shell for automation usecases
@@ -246,6 +250,7 @@ RUN pip3 install awscli==$AWS_CLI_VERSION --upgrade && \
 
 #install azure cli
 #Ubuntu 20.04 (Focal Fossa), includes an azure-cli package with version 2.0.81 provided by the focal/universe repository. This package is outdated and and not recommended. If this package is installed, remove the package before continuing by running the command sudo apt remove azure-cli -y && sudo apt autoremove -y.
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN apt remove azure-cli -y && apt autoremove -y && \
     curl -sL https://packages.microsoft.com/keys/microsoft.asc | \
     gpg --dearmor | \
@@ -259,6 +264,7 @@ RUN apt remove azure-cli -y && apt autoremove -y && \
     az extension add --name azure-devops
 
 #install gcloud
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
     apt-get update && \

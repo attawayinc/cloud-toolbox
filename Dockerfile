@@ -26,7 +26,7 @@ ARG ZSH_VERSION="5.8-3ubuntu1"
 ARG MULTISTAGE_BUILDER_VERSION="2020-12-07"
 
 ######################################################### BUILDER ######################################################
-FROM ksandermann/multistage-builder:$MULTISTAGE_BUILDER_VERSION as builder
+FROM ssmbtech/multistage-builder:$MULTISTAGE_BUILDER_VERSION as builder
 MAINTAINER Kevin Sandermann <kevin.sandermann@gmail.com>
 LABEL maintainer="kevin.sandermann@gmail.com"
 

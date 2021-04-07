@@ -24,10 +24,10 @@ ARG STERN_VERSION="1.14.0"
 ARG SENTINEL_VERSION="0.18.0"
 
 ARG ZSH_VERSION="5.8-3ubuntu1"
-ARG MULTISTAGE_BUILDER_VERSION="2021-04-07"
+ARG MULTISTAGE_BUILDER_VERSION="2004"
 
 ######################################################### BUILDER ######################################################
-FROM ssmbtech/multistage-builder:$MULTISTAGE_BUILDER_VERSION as builder
+FROM ssmbtech/ubuntu:$MULTISTAGE_BUILDER_VERSION as builder
 #MAINTAINER Kevin Sandermann <kevin.sandermann@gmail.com>
 LABEL maintainer="kevin.sandermann@gmail.com"
 
@@ -62,15 +62,15 @@ RUN mkdir helm && curl -SsL --retry 5 "https://get.helm.sh/helm-v$HELM_VERSION-l
 
 #download terraform 0.12
 WORKDIR /root/download
-RUN wget https://releases.hashicorp.com/terraform/$TERRAFORM12_VERSION/terraform\_$TERRAFORM12_VERSION\_linux_amd64.zip && \
+RUN wget --progress=dot:giga https://releases.hashicorp.com/terraform/$TERRAFORM12_VERSION/terraform\_$TERRAFORM12_VERSION\_linux_amd64.zip && \
     unzip ./terraform\_$TERRAFORM12_VERSION\_linux_amd64.zip -d terraform12_cli
 
 #download terraform 0.13
-RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM13_VERSION}/terraform\_${TERRAFORM13_VERSION}\_linux_amd64.zip && \
+RUN wget --progress=dot:giga https://releases.hashicorp.com/terraform/${TERRAFORM13_VERSION}/terraform\_${TERRAFORM13_VERSION}\_linux_amd64.zip && \
     unzip ./terraform\_${TERRAFORM13_VERSION}\_linux_amd64.zip -d terraform13_cli
 
 #download terraform 0.14
-RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform\_${TERRAFORM_VERSION}\_linux_amd64.zip && \
+RUN wget --progress=dot:giga https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform\_${TERRAFORM_VERSION}\_linux_amd64.zip && \
     unzip ./terraform\_${TERRAFORM_VERSION}\_linux_amd64.zip -d terraform_cli
 
 #download docker
@@ -78,7 +78,7 @@ RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform
 RUN mkdir -p /root/download/docker/bin && \
     set -eux; \
     arch="$(uname -m)"; \
-    if ! wget -O docker.tgz "https://download.docker.com/linux/static/stable/${arch}/docker-${DOCKER_VERSION}.tgz"; then \
+    if ! wget --progress=dot:giga -O docker.tgz "https://download.docker.com/linux/static/stable/${arch}/docker-${DOCKER_VERSION}.tgz"; then \
         echo >&2 "error: failed to download 'docker-${DOCKER_VERSION}' from 'stable' for '${arch}'"; \
         exit 1; \
     fi; \
@@ -88,11 +88,11 @@ RUN mkdir -p /root/download/docker/bin && \
         --directory /root/download/docker/bin
 
 #download kubectl
-RUN wget https://storage.googleapis.com/kubernetes-release/release/v$KUBECTL_VERSION/bin/linux/amd64/kubectl -O /root/download/kubectl
+RUN wget --progress=dot:giga https://storage.googleapis.com/kubernetes-release/release/v$KUBECTL_VERSION/bin/linux/amd64/kubectl -O /root/download/kubectl
 
 #download crictl
 RUN mkdir -p /root/download/crictl && \
-    wget "https://github.com/kubernetes-sigs/cri-tools/releases/download/v$CRICTL_VERSION/crictl-v$CRICTL_VERSION-linux-amd64.tar.gz" -O /root/download/crictl.tar.gz && \
+    wget --progress=dot:giga "https://github.com/kubernetes-sigs/cri-tools/releases/download/v$CRICTL_VERSION/crictl-v$CRICTL_VERSION-linux-amd64.tar.gz" -O /root/download/crictl.tar.gz && \
     tar zxvf /root/download/crictl.tar.gz -C /root/download/crictl  && \
     chmod +x /root/download/crictl/crictl
 
@@ -101,22 +101,22 @@ RUN mkdir -p /root/download/crictl && \
 RUN curl -Lo yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
 
 #download vault
-RUN wget https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip && \
+RUN wget --progress=dot:giga https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip && \
     unzip ./vault_${VAULT_VERSION}_linux_amd64.zip
 
 #download tcpping
 #todo: switch to https://github.com/deajan/tcpping/blob/master/tcpping when ubuntu is supported
-RUN wget https://raw.githubusercontent.com/deajan/tcpping/original-1.8/tcpping -O /root/download/tcpping
+RUN wget --progress=dot:giga https://raw.githubusercontent.com/deajan/tcpping/original-1.8/tcpping -O /root/download/tcpping
 
 #download stern
 RUN mkdir -p /root/download/stern && \
-    wget https://github.com/stern/stern/releases/download/v${STERN_VERSION}/stern_${STERN_VERSION}_linux_amd64.tar.gz -O /root/download/stern_arch.tar.gz && \
+    wget --progress=dot:giga https://github.com/stern/stern/releases/download/v${STERN_VERSION}/stern_${STERN_VERSION}_linux_amd64.tar.gz -O /root/download/stern_arch.tar.gz && \
     tar zxvf /root/download/stern_arch.tar.gz -C /root/download/stern && \
     mkdir -p /root/download/stern_binary && \
     mv /root/download/stern/stern_${STERN_VERSION}_linux_amd64/stern /root/download/stern_binary/stern
 
 #download velero CLI
-RUN wget https://github.com/vmware-tanzu/velero/releases/download/v${VELERO_VERSION}/velero-v${VELERO_VERSION}-linux-amd64.tar.gz && \
+RUN wget --progress=dot:giga https://github.com/vmware-tanzu/velero/releases/download/v${VELERO_VERSION}/velero-v${VELERO_VERSION}-linux-amd64.tar.gz && \
    tar -xvf velero-v${VELERO_VERSION}-linux-amd64.tar.gz && \
    mkdir -p /root/download/velero_binary && \
    mv velero-v${VELERO_VERSION}-linux-amd64/velero /root/download/velero_binary/velero
@@ -190,7 +190,7 @@ RUN apt-get update && \
     unzip \
     uuid-runtime \
     vim \
-    wget \
+    wget --progress=dot:giga \
     zip \
     zlib1g-dev &&\
     apt-get clean -y && \
@@ -210,13 +210,13 @@ RUN apt-get update && \
 ENV TERM xterm
 ENV ZSH_THEME agnoster
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
+RUN wget --progress=dot:giga https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
 
 #keep standard shell for automation usecases
 #RUN chsh -s /bin/zsh
 
 #install OpenSSH
-RUN wget "https://mirror.exonetric.net/pub/OpenBSD/OpenSSH/portable/openssh-${OPENSSH_VERSION}.tar.gz" --no-check-certificate && \
+RUN wget --progress=dot:giga "https://mirror.exonetric.net/pub/OpenBSD/OpenSSH/portable/openssh-${OPENSSH_VERSION}.tar.gz" --no-check-certificate && \
     tar xfz openssh-${OPENSSH_VERSION}.tar.gz && \
     cd openssh-${OPENSSH_VERSION} && \
     ./configure && \
@@ -226,9 +226,9 @@ RUN wget "https://mirror.exonetric.net/pub/OpenBSD/OpenSSH/portable/openssh-${OP
     ssh -V
 
 #install ansible + common requirements
-RUN pip3 install pip --upgrade
-RUN pip3 install cryptography
-RUN pip3 install \
+RUN pip install --no-cache-dir pip --upgrade
+RUN pip install --no-cache-dir cryptography
+RUN pip install --no-cache-dir \
     ansible==${ANSIBLE_VERSION} \
     ansible-lint \
     hvac \
@@ -244,7 +244,7 @@ RUN pip3 install \
     setuptools
 
 #install AWS CLI
-RUN pip3 install awscli==$AWS_CLI_VERSION --upgrade && \
+RUN pip install --no-cache-dir awscli==$AWS_CLI_VERSION --upgrade && \
     aws --version
 
 
